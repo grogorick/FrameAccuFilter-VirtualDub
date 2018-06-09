@@ -57,6 +57,15 @@
     <ClInclude Include="include\resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\FrameAccuFilterConfig.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FrameAccuFilterDialog.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FrameAccuFilter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -78,6 +87,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\BlackWhiteFilterDialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FrameAccuFilterDialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FrameAccuFilter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
