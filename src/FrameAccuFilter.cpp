@@ -15,7 +15,10 @@ uint32 FrameAccuFilter::GetParams() {
 }
 
 void FrameAccuFilter::Start() {
-	// Do here some check before filter running, detect SSE or AMD64 for example
+	if (accu) {
+		delete accu;
+		accu = nullptr;
+	}
 }
 
 void FrameAccuFilter::Run() {
@@ -40,17 +43,34 @@ bool FrameAccuFilter::Configure(VDXHWND hwnd) {
 }
 
 void FrameAccuFilter::accumulateFrame(void *dst0, ptrdiff_t dstpitch, const void *src0, ptrdiff_t srcpitch, uint32 w, uint32 h) {
+	if (!accu) {
+		accu = new uint32[w * h];
+		memset(accu, 0, sizeof(uint32) * w * h);
+	}
+
 	char *dst = (char *)dst0;
 	const char *src = (const char *)src0;
 	for (uint32 y = 0; y<h; ++y) {
 		// Get scanline
 		uint32 *srcline = (uint32 *)src;
 		uint32 *dstline = (uint32 *)dst;
+		uint32 *acculine = &accu[y * w];
 		for (uint32 x = 0; x<w; ++x) {
 			// Process pixels
-			uint32 data = srcline[x];
-			uint32 gray = uint32(0.299f * (data & 0x000000ff) + 0.587f * ((data & 0x0000ff00) >> 8) + 0.114f *((data & 0x00ff0000) >> 16));
+			uint32 srcData = srcline[x];
+			/*
+			uint32 gray = uint32(0.299f * (srcData & 0x000000ff) + 0.587f * ((srcData & 0x0000ff00) >> 8) + 0.114f *((srcData & 0x00ff0000) >> 16));
 			dstline[x] = gray | (gray << 8) | (gray << 16);
+			/*/
+			uint32 accuData = acculine[x];
+			uint32 srcR = (srcData & 0x000000ff);
+			uint32 srcG = (srcData & 0x0000ff00) >> 8;
+			uint32 srcB = (srcData & 0x00ff0000) >> 16;
+			uint32 accuR = (accuData & 0x000000ff);
+			uint32 accuG = (accuData & 0x0000ff00) >> 8;
+			uint32 accuB = (accuData & 0x00ff0000) >> 16;
+			dstline[x] = (acculine[x] = max(srcR, accuR) | (max(srcG, accuG) << 8) | (max(srcB, accuB) << 16));
+			/**/
 		}
 		src += srcpitch;
 		dst += dstpitch;
