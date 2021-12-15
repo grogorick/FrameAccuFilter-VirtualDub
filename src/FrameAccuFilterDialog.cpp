@@ -1,4 +1,5 @@
 #include <FrameAccuFilterDialog.h>
+#include <sstream>
 
 FrameAccuFilterDialog::FrameAccuFilterDialog(FrameAccuFilterConfig& config, IVDXFilterPreview *ifp):mifp(ifp), mConfigNew(config){
 }
@@ -10,63 +11,58 @@ bool FrameAccuFilterDialog::Show(HWND parent) {
 INT_PTR FrameAccuFilterDialog::DlgProc(UINT msg, WPARAM wParam, LPARAM lParam) {
 	switch (msg) {
 	case WM_INITDIALOG:
-		return !OnInit();
-
-	case WM_DESTROY:
-		OnDestroy();
-		break;
+		OnInit();
+		return TRUE;
 
 	case WM_COMMAND:
 		if (OnCommand(LOWORD(wParam)))
 			return TRUE;
 		break;
-
-	case WM_HSCROLL:
-		if (mifp && SaveToConfig())
-			mifp->RedoFrame();
-		return TRUE;
 	}
 
 	return FALSE;
 }
 
-bool FrameAccuFilterDialog::OnInit() {
+void FrameAccuFilterDialog::OnInit() {
 	mConfigOld = mConfigNew;
-	// init preview button
-	HWND hwndPreview = GetDlgItem(mhdlg, ID_DIALOG_BUTTON_PREVIEW);
-	if (hwndPreview && mifp) {
-		EnableWindow(hwndPreview, TRUE);
-		mifp->InitButton((VDXHWND)hwndPreview);
-	}
-	return false;
-}
 
-void FrameAccuFilterDialog::OnDestroy() {
-	if (mifp)
-		mifp->InitButton(NULL);
+	const wchar_t *operations[] = { L"Max", L"Add", L"Multiply" };
+	for (int i = 0; i < 3; ++i) SendDlgItemMessage(mhdlg, IDC_COMBO1, CB_ADDSTRING, 0, (LPARAM)operations[i]);
+
+	LoadFromConfig();
+
+	// gain focus to first control
+	HWND hwndFirst = GetDlgItem(mhdlg, IDC_COMBO1);
+	if (hwndFirst)
+		SendMessage(mhdlg, WM_NEXTDLGCTL, (WPARAM)hwndFirst, TRUE);
 }
 
 bool FrameAccuFilterDialog::OnCommand(int cmd) {
 	switch (cmd) {
 		case ID_DIALOG_BUTTON_OK:
-			SaveToConfig();
 			EndDialog(mhdlg, true);
 			return true;
+
 		case ID_DIALOG_BUTTON_CANCEL:
 			mConfigNew = mConfigOld;
 			EndDialog(mhdlg, false);
 			return true;
-		case ID_DIALOG_BUTTON_PREVIEW:
-			if (mifp)
-				mifp->Toggle((VDXHWND)mhdlg);
+
+		case IDC_COMBO1:
+			SaveToConfig();
 			return true;
 	}
 	return false;
 }
 
 void FrameAccuFilterDialog::LoadFromConfig() {
+	//wchar_t buffer[256];
+	//wsprintfW(buffer, L"%d", (int)mConfigNew.mOperation);
+	//MessageBox(mhdlg, buffer, L"Titel", 0);
+
+	SendDlgItemMessage(mhdlg, IDC_COMBO1, CB_SETCURSEL, (int) mConfigNew.mOperation, 0);
 }
 
-bool FrameAccuFilterDialog::SaveToConfig() {
-	return false;
+void FrameAccuFilterDialog::SaveToConfig() {
+	mConfigNew.mOperation = (FrameAccuFilterConfig::Operation) SendDlgItemMessage(mhdlg, IDC_COMBO1, CB_GETCURSEL, 0, 0);
 }

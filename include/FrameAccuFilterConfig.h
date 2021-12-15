@@ -6,12 +6,12 @@
 class FrameAccuFilterConfig {
 public:
 	FrameAccuFilterConfig()
+		:mOperation(Max)
 	{
-		mMode = MAX;
 	}
 
 public:
-	enum Mode { MAX } mMode;
+	enum Operation { Max, Add, Multiply } mOperation;
 };
 
 #endif 

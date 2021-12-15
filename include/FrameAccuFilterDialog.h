@@ -17,12 +17,11 @@ public:
 protected:
 	IVDXFilterPreview *const mifp;
 
-	bool OnInit();
+	void OnInit();
 	bool OnCommand(int cmd);
-	void OnDestroy();
 
 	void LoadFromConfig();
-	bool SaveToConfig();
+	void SaveToConfig();
 
 	FrameAccuFilterConfig& mConfigNew;
 	FrameAccuFilterConfig mConfigOld;

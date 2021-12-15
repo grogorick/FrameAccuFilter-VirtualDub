@@ -45,7 +45,8 @@ bool FrameAccuFilter::Configure(VDXHWND hwnd) {
 void FrameAccuFilter::accumulateFrame(void *dst0, ptrdiff_t dstpitch, const void *src0, ptrdiff_t srcpitch, uint32 w, uint32 h) {
 	if (!accu) {
 		accu = new uint32[w * h];
-		memset(accu, 0, sizeof(uint32) * w * h);
+		int initVal = (mConfig.mOperation == FrameAccuFilterConfig::Multiply) ? 255 : 0;
+		memset(accu, initVal, sizeof(uint32) * w * h);
 	}
 
 	char *dst = (char *)dst0;
@@ -69,11 +70,20 @@ void FrameAccuFilter::accumulateFrame(void *dst0, ptrdiff_t dstpitch, const void
 			uint32 accuR = (accuData & 0x000000ff);
 			uint32 accuG = (accuData & 0x0000ff00) >> 8;
 			uint32 accuB = (accuData & 0x00ff0000) >> 16;
-			dstline[x] = (acculine[x] = max(srcR, accuR) | (max(srcG, accuG) << 8) | (max(srcB, accuB) << 16));
+			dstline[x] = (acculine[x] = op(srcR, accuR) | (op(srcG, accuG) << 8) | (op(srcB, accuB) << 16));
 			/**/
 		}
 		src += srcpitch;
 		dst += dstpitch;
+	}
+}
+
+uint32 FrameAccuFilter::op(uint32 accu, uint32 src) {
+	switch (mConfig.mOperation) {
+		case FrameAccuFilterConfig::Max: return max(accu, src);
+		case FrameAccuFilterConfig::Add: return min(accu + src, 255);
+		case FrameAccuFilterConfig::Multiply: return uint32(float(accu) * float(src) / 255.f);
+		default: return 0;
 	}
 }
 
@@ -82,13 +92,18 @@ VDXVF_DEFINE_SCRIPT_METHOD(FrameAccuFilter, ScriptConfig, "ii")
 VDXVF_END_SCRIPT_METHODS()
 
 void FrameAccuFilter::GetSettingString(char *buf, int maxlen) {
-	SafePrintf(buf, maxlen, " (Mode:%d)", mConfig.mMode);
+	switch (mConfig.mOperation) {
+		case FrameAccuFilterConfig::Max: SafePrintf(buf, maxlen, " (Max)"); break;
+		case FrameAccuFilterConfig::Add: SafePrintf(buf, maxlen, " (Add)"); break;
+		case FrameAccuFilterConfig::Multiply: SafePrintf(buf, maxlen, " (Multiply)"); break;
+		default: SafePrintf(buf, maxlen, "(Error)"); break;
+	}
 }
 
 void FrameAccuFilter::GetScriptString(char *buf, int maxlen) {
-	SafePrintf(buf, maxlen, "Config(%d)", mConfig.mMode);
+	SafePrintf(buf, maxlen, "Config(%d)", mConfig.mOperation);
 }
 
 void FrameAccuFilter::ScriptConfig(IVDXScriptInterpreter *isi, const VDXScriptValue *argv, int argc) {
-	mConfig.mMode = FrameAccuFilterConfig::Mode(argv[0].asInt());
+	mConfig.mOperation = FrameAccuFilterConfig::Operation(argv[0].asInt());
 }

@@ -1,8 +1,9 @@
-### VirtualDub plugin for education purpose - works as BlackWhite filter
+### Frame Accumulation Filter - VirtualDub plugin
 
-Windows-VirtualDub-Plugin-BlackWhite
+Create long exposure images from short exposure videos or photo burst sequences (with a static camera).
+Each frame is combined with the previous frame (accumulated) via `max` operation, i.e. brighter pixels in the new frame will replace darker pixels in the previous.
+This gives a nice effect e.g. for recordings of fireworks.
 
-Using VDXFrame helper and Microsoft Visual Studio 2015 as build environment.
 
 
-
+Based on [Windows-VirtualDub-Plugin-BlackWhite](https://github.com/shadwork/Windows-VirtualDub-Plugin-BlackWhite)
