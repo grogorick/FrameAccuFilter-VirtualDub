@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Windows-VirtualDub-Plugin-BlackWhite", "Windows-VirtualDub-Plugin-BlackWhite.vcxproj", "{5C763845-7BB2-461C-BC23-E063CEAB9381}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Windows-VirtualDub-Plugin-FrameAccuFilter", "Windows-VirtualDub-Plugin-FrameAccuFilter.vcxproj", "{5C763845-7BB2-461C-BC23-E063CEAB9381}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

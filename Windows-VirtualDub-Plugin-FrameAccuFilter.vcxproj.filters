@@ -42,16 +42,7 @@
     <ClInclude Include="include\vd2\plugin\vdvideoutil.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\BlackWhiteFilter.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\stdafx.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\BlackWhiteFilterDialog.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\BlackWhiteFilterConfig.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\resource.h">
@@ -81,12 +72,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\VideoFilterEntry.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\BlackWhiteFilter.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\BlackWhiteFilterDialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\FrameAccuFilterDialog.cpp">
