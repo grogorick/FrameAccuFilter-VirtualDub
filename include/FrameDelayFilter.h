@@ -1,13 +1,13 @@
 #include <vd2/VDXFrame/VideoFilter.h>
 #include <vd2/VDXFrame/VideoFilterEntry.h>
-#include <FrameAccuFilterDialog.h>
+#include <FrameDelayFilterDialog.h>
 
-#ifndef FILTER_VD_FRAME_ACCU
-#define FILTER_VD_FRAME_ACCU
+#ifndef FILTER_VD_FRAME_DELAY
+#define FILTER_VD_FRAME_DELAY
 
 extern int g_VFVAPIVersion;
 
-class FrameAccuFilter : public VDXVideoFilter {
+class FrameDelayFilter : public VDXVideoFilter {
 	public:
 		virtual uint32 GetParams();
 		virtual void Start();
@@ -17,12 +17,16 @@ class FrameAccuFilter : public VDXVideoFilter {
 		virtual void GetScriptString(char *buf, int maxlen);
 		VDXVF_DECLARE_SCRIPT_METHODS();
 	protected:
-		void accumulateFrame(void *dst, ptrdiff_t dstpitch, const void *src, ptrdiff_t srcpitch, uint32 w, uint32 h);
-		uint32 op(uint32 accu, uint32 src);
-		FrameAccuFilterConfig mConfig;
+		void delayFrame(void *dst, ptrdiff_t dstpitch, const void *src, ptrdiff_t srcpitch, uint32 w, uint32 h);
+		void copyFrame(void *dst0, ptrdiff_t dstpitch, const void *src0, ptrdiff_t srcpitch, uint32 w, uint32 h);
+
+		FrameDelayFilterConfig mConfig;
 		void ScriptConfig(IVDXScriptInterpreter *isi, const VDXScriptValue *argv, int argc);
 
-		uint32 *accu = nullptr;
+		uint32 *buffer = nullptr;
+		uint8 bufferCount = 0;
+		uint8 bufferIdx = 0;
+
 		bool reset = true;
 };
 

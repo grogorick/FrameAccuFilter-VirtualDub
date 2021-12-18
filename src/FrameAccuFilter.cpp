@@ -39,12 +39,16 @@ void FrameAccuFilter::Run() {
 
 bool FrameAccuFilter::Configure(VDXHWND hwnd) {
 	FrameAccuFilterDialog dlg(mConfig, fa->ifp);
-	return dlg.Show((HWND)hwnd);
+	reset = dlg.Show((HWND)hwnd);
+	return reset;
 }
 
 void FrameAccuFilter::accumulateFrame(void *dst0, ptrdiff_t dstpitch, const void *src0, ptrdiff_t srcpitch, uint32 w, uint32 h) {
-	if (!accu) {
-		accu = new uint32[w * h];
+	if (reset || !accu) {
+		reset = false;
+		if (!accu) {
+			accu = new uint32[w * h];
+		}
 		int initVal = (mConfig.mOperation == FrameAccuFilterConfig::Multiply) ? 255 : 0;
 		memset(accu, initVal, sizeof(uint32) * w * h);
 	}
@@ -59,10 +63,6 @@ void FrameAccuFilter::accumulateFrame(void *dst0, ptrdiff_t dstpitch, const void
 		for (uint32 x = 0; x<w; ++x) {
 			// Process pixels
 			uint32 srcData = srcline[x];
-			/*
-			uint32 gray = uint32(0.299f * (srcData & 0x000000ff) + 0.587f * ((srcData & 0x0000ff00) >> 8) + 0.114f *((srcData & 0x00ff0000) >> 16));
-			dstline[x] = gray | (gray << 8) | (gray << 16);
-			/*/
 			uint32 accuData = acculine[x];
 			uint32 srcR = (srcData & 0x000000ff);
 			uint32 srcG = (srcData & 0x0000ff00) >> 8;
@@ -96,7 +96,7 @@ void FrameAccuFilter::GetSettingString(char *buf, int maxlen) {
 		case FrameAccuFilterConfig::Max: SafePrintf(buf, maxlen, " (Max)"); break;
 		case FrameAccuFilterConfig::Add: SafePrintf(buf, maxlen, " (Add)"); break;
 		case FrameAccuFilterConfig::Multiply: SafePrintf(buf, maxlen, " (Multiply)"); break;
-		default: SafePrintf(buf, maxlen, "(Error)"); break;
+		default: SafePrintf(buf, maxlen, " (Error)"); break;
 	}
 }
 
