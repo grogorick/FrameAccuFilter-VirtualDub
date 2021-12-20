@@ -18,7 +18,6 @@ class FrameDelayFilter : public VDXVideoFilter {
 		VDXVF_DECLARE_SCRIPT_METHODS();
 	protected:
 		void delayFrame(void *dst, ptrdiff_t dstpitch, const void *src, ptrdiff_t srcpitch, uint32 w, uint32 h);
-		void copyFrame(void *dst0, ptrdiff_t dstpitch, const void *src0, ptrdiff_t srcpitch, uint32 w, uint32 h);
 
 		FrameDelayFilterConfig mConfig;
 		void ScriptConfig(IVDXScriptInterpreter *isi, const VDXScriptValue *argv, int argc);

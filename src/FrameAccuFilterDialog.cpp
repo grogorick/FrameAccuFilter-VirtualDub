@@ -27,12 +27,12 @@ void FrameAccuFilterDialog::OnInit() {
 	mConfigOld = mConfigNew;
 
 	const wchar_t *operations[] = { L"Max", L"Add", L"Multiply" };
-	for (int i = 0; i < 3; ++i) SendDlgItemMessage(mhdlg, IDC_COMBO1, CB_ADDSTRING, 0, (LPARAM)operations[i]);
+	for (int i = 0; i < 3; ++i) SendDlgItemMessage(mhdlg, IDC_COMBO_OPERATION, CB_ADDSTRING, 0, (LPARAM)operations[i]);
 
 	LoadFromConfig();
 
 	// gain focus to first control
-	HWND hwndFirst = GetDlgItem(mhdlg, IDC_COMBO1);
+	HWND hwndFirst = GetDlgItem(mhdlg, IDC_COMBO_OPERATION);
 	if (hwndFirst)
 		SendMessage(mhdlg, WM_NEXTDLGCTL, (WPARAM)hwndFirst, TRUE);
 }
@@ -48,7 +48,7 @@ bool FrameAccuFilterDialog::OnCommand(int cmd) {
 			EndDialog(mhdlg, false);
 			return true;
 
-		case IDC_COMBO1:
+		case IDC_COMBO_OPERATION:
 			SaveToConfig();
 			return true;
 	}
@@ -60,9 +60,9 @@ void FrameAccuFilterDialog::LoadFromConfig() {
 	//wsprintfW(buffer, L"%d", (int)mConfigNew.mOperation);
 	//MessageBox(mhdlg, buffer, L"Titel", 0);
 
-	SendDlgItemMessage(mhdlg, IDC_COMBO1, CB_SETCURSEL, (int) mConfigNew.mOperation, 0);
+	SendDlgItemMessage(mhdlg, IDC_COMBO_OPERATION, CB_SETCURSEL, (int) mConfigNew.mOperation, 0);
 }
 
 void FrameAccuFilterDialog::SaveToConfig() {
-	mConfigNew.mOperation = (FrameAccuFilterConfig::Operation) SendDlgItemMessage(mhdlg, IDC_COMBO1, CB_GETCURSEL, 0, 0);
+	mConfigNew.mOperation = (FrameAccuFilterConfig::Operation) SendDlgItemMessage(mhdlg, IDC_COMBO_OPERATION, CB_GETCURSEL, 0, 0);
 }

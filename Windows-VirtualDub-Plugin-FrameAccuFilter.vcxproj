@@ -172,11 +172,15 @@
     <ClInclude Include="include\FrameAccuFilter.h" />
     <ClInclude Include="include\FrameAccuFilterConfig.h" />
     <ClInclude Include="include\FrameAccuFilterDialog.h" />
+    <ClInclude Include="include\FrameCacheFilter.h" />
+    <ClInclude Include="include\FrameCacheFilterConfig.h" />
+    <ClInclude Include="include\FrameCacheFilterDialog.h" />
     <ClInclude Include="include\FrameDelayFilter.h" />
     <ClInclude Include="include\FrameDelayFilterConfig.h" />
     <ClInclude Include="include\FrameDelayFilterDialog.h" />
     <ClInclude Include="include\resource.h" />
     <ClInclude Include="include\stdafx.h" />
+    <ClInclude Include="include\Tools.h" />
     <ClInclude Include="include\vd2\plugin\vdaudiofilt.h" />
     <ClInclude Include="include\vd2\plugin\vdinputdriver.h" />
     <ClInclude Include="include\vd2\plugin\vdplugin.h" />
@@ -190,10 +194,13 @@
   <ItemGroup>
     <ClCompile Include="src\FrameAccuFilter.cpp" />
     <ClCompile Include="src\FrameAccuFilterDialog.cpp" />
+    <ClCompile Include="src\FrameCacheFilter.cpp" />
+    <ClCompile Include="src\FrameCacheFilterDialog.cpp" />
     <ClCompile Include="src\FrameDelayFilter.cpp" />
     <ClCompile Include="src\FrameDelayFilterDialog.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\stdafx.cpp" />
+    <ClCompile Include="src\Tools.cpp" />
     <ClCompile Include="src\VideoFilter.cpp" />
     <ClCompile Include="src\VideoFilterDialog.cpp" />
     <ClCompile Include="src\VideoFilterEntry.cpp" />

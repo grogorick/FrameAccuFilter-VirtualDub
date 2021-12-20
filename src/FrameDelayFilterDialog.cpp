@@ -29,7 +29,7 @@ void FrameDelayFilterDialog::OnInit() {
 	LoadFromConfig();
 
 	// gain focus to first control
-	HWND hwndFirst = GetDlgItem(mhdlg, IDC_EDIT1);
+	HWND hwndFirst = GetDlgItem(mhdlg, IDC_EDIT_FRAMES);
 	if (hwndFirst)
 		SendMessage(mhdlg, WM_NEXTDLGCTL, (WPARAM)hwndFirst, TRUE);
 }
@@ -45,7 +45,7 @@ bool FrameDelayFilterDialog::OnCommand(int cmd) {
 			EndDialog(mhdlg, false);
 			return true;
 
-		case IDC_EDIT1:
+		case IDC_EDIT_FRAMES:
 			SaveToConfig();
 			return true;
 	}
@@ -61,17 +61,17 @@ void FrameDelayFilterDialog::LoadFromConfig() {
 
 	wchar_t buffer[8];
 	wsprintfW(buffer, L"%d", mConfigNew.mNumFrames);
-	SendDlgItemMessage(mhdlg, IDC_EDIT1, WM_SETTEXT, 0, (LPARAM)buffer);
+	SendDlgItemMessage(mhdlg, IDC_EDIT_FRAMES, WM_SETTEXT, 0, (LPARAM)buffer);
 }
 
 void FrameDelayFilterDialog::SaveToConfig() {
 	wchar_t buffer[8];
-	size_t len = SendDlgItemMessage(mhdlg, IDC_EDIT1, WM_GETTEXT, sizeof(buffer) / sizeof(wchar_t), (LPARAM)buffer);
+	size_t len = SendDlgItemMessage(mhdlg, IDC_EDIT_FRAMES, WM_GETTEXT, sizeof(buffer) / sizeof(wchar_t), (LPARAM)buffer);
 	long numFrames = wcstol(buffer, nullptr, 10);
 
 	mConfigNew.mNumFrames = (uint8)max(1, min(255, numFrames));
 	if (mConfigNew.mNumFrames != numFrames) {
 		wsprintfW(buffer, L"%d", mConfigNew.mNumFrames);
-		SendDlgItemMessage(mhdlg, IDC_EDIT1, WM_SETTEXT, 0, (LPARAM)buffer);
+		SendDlgItemMessage(mhdlg, IDC_EDIT_FRAMES, WM_SETTEXT, 0, (LPARAM)buffer);
 	}
 }

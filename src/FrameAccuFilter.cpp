@@ -16,7 +16,7 @@ uint32 FrameAccuFilter::GetParams() {
 
 void FrameAccuFilter::Start() {
 	if (accu) {
-		delete accu;
+		delete[] accu;
 		accu = nullptr;
 	}
 }

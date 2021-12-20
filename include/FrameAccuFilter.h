@@ -19,6 +19,7 @@ class FrameAccuFilter : public VDXVideoFilter {
 	protected:
 		void accumulateFrame(void *dst, ptrdiff_t dstpitch, const void *src, ptrdiff_t srcpitch, uint32 w, uint32 h);
 		uint32 op(uint32 accu, uint32 src);
+
 		FrameAccuFilterConfig mConfig;
 		void ScriptConfig(IVDXScriptInterpreter *isi, const VDXScriptValue *argv, int argc);
 

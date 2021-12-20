@@ -1,4 +1,5 @@
 #include <FrameDelayFilter.h>
+#include <Tools.h>
 
 uint32 FrameDelayFilter::GetParams() {
 	if (g_VFVAPIVersion >= 12) {
@@ -16,7 +17,7 @@ uint32 FrameDelayFilter::GetParams() {
 
 void FrameDelayFilter::Start() {
 	if (buffer) {
-		delete buffer;
+		delete[] buffer;
 		buffer = nullptr;
 	}
 }
@@ -44,9 +45,6 @@ bool FrameDelayFilter::Configure(VDXHWND hwnd) {
 }
 
 void FrameDelayFilter::delayFrame(void *dst0, ptrdiff_t dstpitch, const void *src0, ptrdiff_t srcpitch, uint32 w, uint32 h) {
-	ptrdiff_t bufferpitch = sizeof(uint32) * w;
-	ptrdiff_t bufferIdxStep = w * h;
-
 	if (reset || !buffer) {
 		reset = false;
 		if (bufferCount != mConfig.mNumFrames || !buffer) {
@@ -59,22 +57,14 @@ void FrameDelayFilter::delayFrame(void *dst0, ptrdiff_t dstpitch, const void *sr
 		memset(buffer, 0, sizeof(uint32) * w * h * bufferCount);
 	}
 
+	ptrdiff_t bufferpitch = sizeof(uint32) * w;
+	ptrdiff_t bufferIdxStep = w * h;
+
 	uint32 *currentBuffer = buffer + (bufferIdx * bufferIdxStep);
-	copyFrame(dst0, dstpitch, currentBuffer, bufferpitch, w, h);
-	copyFrame(currentBuffer, bufferpitch, src0, srcpitch, w, h);
+	Tools::copyFrame(dst0, dstpitch, currentBuffer, bufferpitch, w, h);
+	Tools::copyFrame(currentBuffer, bufferpitch, src0, srcpitch, w, h);
 
 	bufferIdx = (bufferIdx + 1) % bufferCount;
-}
-
-void FrameDelayFilter::copyFrame(void *dst0, ptrdiff_t dstpitch, const void *src0, ptrdiff_t srcpitch, uint32 w, uint32 h) {
-	char *dst = (char *)dst0;
-	const char *src = (const char *)src0;
-	for (uint32 y = 0; y < h; ++y) {
-		// Copy scanline
-		memcpy(dst, src, sizeof(uint32) * w);
-		src += srcpitch;
-		dst += dstpitch;
-	}
 }
 
 VDXVF_BEGIN_SCRIPT_METHODS(FrameDelayFilter)
